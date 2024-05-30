@@ -1,0 +1,48 @@
+.nav {
+    background-color: #333333;
+    padding-right: 10px;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.nav-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Add this line */
+}
+
+.icon {
+    height: 50px;
+    width: 60px;
+    padding: 0px;
+    margin: 0px;
+}
+
+.log_button{
+    color: #ffffff;
+   font-size: 18px;
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex; /* Add this line */
+}
+
+ul li {
+    margin-left: 20px; /* Adjust margin-left instead of margin-right */
+}
+
+ul li:first-child {
+    margin-left: 0; /* Remove margin for the first list item */
+}
+
+ul li a {
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 18px;
+}
+
+ul li a:hover {
+    color: #ff6f61;
+}

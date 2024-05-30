@@ -1,0 +1,132 @@
+.wrapper_sign{
+    margin: 0px auto;
+    width:100%;
+    min-height:100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.s_container{
+    position: relative;
+    max-width:600px;
+    height:auto;
+    position: relative;
+    display: flex;
+    box-shadow: 0 10px 10px #999999; 
+    background: #ffffff;
+}
+
+.sign_left,
+.sign_right{
+    padding: 30px;
+    display: flex;
+}
+
+.sign_left{
+    width:60%;
+    background:  #333333;
+    clip-path: inset (10px 50px  #333333);
+}
+
+.sign_left{
+    padding: 60px 30px;
+    width:50%;
+    margin-left: -10%;
+}
+
+.sign_text{
+    position: relative;
+    width: 100%;
+    color: #ffffff;
+}
+
+.sign_text h2{
+    margin: 0 0 15px 0;
+    font-size: 30px;
+    font-weight: 700;
+}
+
+.sign_text .btn{
+    display: inline-block;
+    font-family: poppins;
+    padding: 7px 20px;
+    font-size: 16px;
+    letter-spacing: 1px;
+    text-decoration: none;
+    border-radius: 30px;
+    color:  #ffffff;
+    outline: none;
+    border: 1px solid #ffffff;
+    box-shadow: inset 0 0 0 0  #ffffff;
+    transition: .3s;
+    }
+
+    .sign_text .btn:hover{
+        color:#333333;
+        border: 1px solid #ffffff;
+        box-shadow: inset 150px 0 0 0   #ffffff;
+        cursor: pointer;
+        }
+
+     .sign_right{
+        display: flex;
+        flex-direction: column;
+        margin-left: 20px;
+     }
+    
+     .error{
+        color:#e13c3c;
+        margin: 10px 0;
+     }
+     .sign_right input{
+        padding: 5px;
+        border-radius: 3px;
+        width:300px;
+        margin: 10px 0px;
+        border-radius: 10px;
+        background: transparent;
+        border-color: #333333
+
+     }
+
+     .sign_right input[type=submit]{
+        box-shadow: inset 0 0 0 0  #333333;
+        cursor: pointer;
+        transition: .5s;
+        border: 1px solid   #333333;
+        color:   #333333;
+
+     }
+     .sign_right input[type=submit]:hover{
+        box-shadow: inset 150px 0 150px 0  #333333;
+        cursor: pointer;
+        color:#ffffff
+     }
+
+     .sign_right input:focus{
+        border-color: #53b494;
+     }
+     .sign_right h2{
+
+        margin-bottom: 10px;
+     }
+
+
+        
+        @media(max-width: 575px){
+            .s_container{
+            flex-direction: column;
+            box-shadow: none;
+            }
+            .sign_left,.sign_right{
+            width: 100%;
+            margin: 0;
+            clip-path: none;
+            }
+            .sign_right{
+            padding: 30px;
+            }
+            
+            }

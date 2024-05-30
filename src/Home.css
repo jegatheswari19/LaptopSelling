@@ -1,0 +1,118 @@
+
+
+
+
+.text {
+  height: 80vh;
+  background-image: url('./assets/home1.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  animation-name: fade;
+  animation-timing-function: ease-in;
+  animation-iteration-count: infinite;
+  animation-duration: 25s;
+  animation-direction: alternate;
+  display: flex;
+  justify-content: center;
+}
+
+.color button {
+  text-align: center;
+  margin: 10px auto;
+  width: 200px;
+  font-size: 27px;
+  cursor: pointer;
+  background-color: #333333;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.color {
+  background-color: rgba(0, 0, 0, 0.5);
+  width: 100vw;
+}
+
+.ab {
+  height: 300px;
+  width: 300px;
+}
+
+.color h1 {
+  text-align: center;
+  color: #ffffff;
+  padding-top: 230px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 40px;
+}
+
+.row {
+  background-color: #f5f5f5;
+  display: flex;
+  flex-wrap: wrap;
+  padding-top: 20px;
+  padding-bottom: 10px;
+  justify-content: center;
+}
+
+* {
+  margin: 0px;
+}
+
+.column:hover {
+  transform: scale(1.05);
+  filter: drop-shadow(0 0 5px #333333);
+}
+
+.column h3 {
+  text-align: center;
+  color: #333333;
+  padding: 20px;
+  font-size: 24px;
+}
+
+.head {
+  font-size: 30px;
+  text-align: center;
+  background-color:#f5f5f5;
+  color: #333333;
+  padding: 20px;
+  font-weight: bold;
+  font-family: 'Poppins', sans-serif;
+}
+
+.column {
+  background-color: #ffffff;
+  display: inline-block;
+  height: 300px;
+  width: 250px;
+  margin: 20px;
+  padding: 20px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.ab {
+  border-radius: 10px;
+  height: 200px;
+  width: 220px;
+  padding-left: 16px;
+}
+
+@keyframes fade {
+  0% {
+      background-image: url("./assets/home1.jpg");
+  }
+  25% {
+      background-image: url("./assets/home2.jpg");
+  }
+  75% {
+      background-image: url("./assets/home3.jpeg");
+  }
+  100% {
+      background-image: url("./assets/home4.jpeg");
+  }
+}
