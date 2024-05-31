@@ -28,7 +28,7 @@ export default function Navbars() {
         <div className='nav'>
             <nav className='nav-bar'>
                 <img className='icon' src={pic} alt="icon"></img>
-                <ul>
+                <ul className='navbar'>
                     <li><a href="/">Home</a></li>
                     <li><a href="/product">Products</a></li>
                     <li><a href="/cart">Cart</a></li>
