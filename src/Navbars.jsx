@@ -12,14 +12,18 @@ export default function Navbars() {
         if (loggedIn) {
             setLog('logout');
         }
-    }, []);
+    });
 
     const handle = () =>{
          if(log == 'logout'){
             setLog('login');
+            sessionStorage.removeItem('loggedIn');
             navigate('/Login');       }
+    
+       else if (log == 'login'){
+            navigate('/Login');
+        }
     }
-
     return (
         <div className='nav'>
             <nav className='nav-bar'>
