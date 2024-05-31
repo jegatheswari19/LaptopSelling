@@ -19,6 +19,8 @@
 
 .log_button{
     color: #ffffff;
+    background-color: #333333;
+    border: none;
    font-size: 18px;
 }
 
