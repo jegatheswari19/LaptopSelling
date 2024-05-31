@@ -1,24 +1,24 @@
 import pic1 from './assets/sony.jpg';
 import pic2 from './assets/asus.jpg';
+import { data } from 'autoprefixer';
+import { useState } from 'react';
 
 
 function Product(){
+    const[data,setData] = useState();
+    useEffect( () =>{
+        fetch('http://localhost:8081')
+        .then(res=> res.json())
+        .then(data =>setData(data))
+        .then(err => console.log(err))
+      },[])
 
     return(
 
        <div>
         <h1>Products</h1>
-        <div className="column">
-                    <img className="ab" src={pic1} alt="SONY" />
-                    <h3>SONY</h3>
-                    </div>
-        <div className="column">
-                    <img className="ab" src={pic2} alt="SONY" />
-                    <h3>ASUS</h3>
-                    </div>
-
+         <h2>{data}</h2>
        </div>
     )
 }
-
 export default Product;
