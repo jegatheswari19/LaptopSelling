@@ -9,6 +9,18 @@ import pic8 from './assets/apple.jpg';
 import { Link } from 'react-router-dom';
 import './Home.css';
 
+const brands = [
+    { name: 'SONY', img: pic1 },
+    { name: 'ASUS', img: pic2 },
+    { name: 'DELL', img: pic3 },
+    { name: 'HP', img: pic4 },
+    { name: 'LENOVO', img: pic5 },
+    { name: 'ACER', img: pic6 },
+    { name: 'SAMSUNG', img: pic7 },
+    { name: 'APPLE', img: pic8 }
+];
+
+
 function Home() {
 
  
@@ -21,15 +33,22 @@ function Home() {
             </div>
             <header className='head'>OUR BRANDS</header> 
             <div className="row"> 
+             {brands.map((brand) => (
+                    <Link to={`/products/${brand.name.toLowerCase()}`} key={brand.name}>
+                        <div className="column">
+                            <img className="ab" src={brand.img} alt={brand.name} />
+                            <h3>{brand.name}</h3>
+                        </div>
+                    </Link>
+                ))} 
            
-               <Link to='/Product'> 
+            {/* <Link to='/Product'> 
                <div className="column">
                     <img className="ab" src={pic1} alt="SONY" />
                     <h3>SONY</h3>
                     </div>
              </Link> 
 
-            
                
                <Link to='/Product'> <div className="column">
                     <img className="ab" src={pic2} alt="ASUS" />
@@ -61,9 +80,9 @@ function Home() {
                <Link to='/Product'> <div className="column">
                     <img className="ab" src={pic8} alt="APPLE" />
                     <h3>APPLE</h3>
-                </div>  </Link> 
-            </div>
-        </div>
+                </div>  </Link> */}
+            </div> 
+        </div> 
     );
 }
 
