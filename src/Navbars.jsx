@@ -36,7 +36,6 @@ export default function Navbars() {
 
     return (
         <div className='nav'>
-<<<<<<< HEAD
             <nav>
                 <ul className="sidebar">
                     <li onClick={hideSidebar}><a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="26" viewBox="0 96 960 960" width="26">
@@ -56,15 +55,6 @@ export default function Navbars() {
                     <li className="menu-button" onClick={showSidebar}><a href="#"><svg xmlns="http://www.w3.org/2000/svg" height="26" viewBox="0 96 960 960" width="26">
                         <path d="M120 816v-60h720v60H120Zm0-210v-60h720v60H120Zm0-210v-60h720v60H120Z" />
                     </svg></a></li>
-=======
-            <nav className='nav-bar'>
-                <img className='icon' src={pic} alt="icon"></img>
-                <ul className='navbar'>
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/product">Products</a></li>
-                    <li><a href="/cart">Cart</a></li>
-                    <li><button  className="log_button"onChange={(e)=>setLog(e.target.value)} onClick={handle}>{log}</button></li>
->>>>>>> efe06ac5200e7ea23e24cc804b9f31ac84fc6d1f
                 </ul>
             </nav>
         </div>
