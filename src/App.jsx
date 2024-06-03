@@ -8,10 +8,7 @@ import Home from './Home';
 import Product from './Product.jsx';
 import Login from './Login';
 import Signin from './Signin.jsx';
-<<<<<<< HEAD
-=======
 //import Sidebar from './Sidebar.jsx';
->>>>>>> 75ba0e649a441f2f6d5b838ca9ed3ab25435a575
 
 function App() {
   return (
