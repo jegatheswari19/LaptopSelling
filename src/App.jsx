@@ -7,7 +7,6 @@ import Home from './Home';
 import Product from './Product.jsx';
 import Login from './Login';
 import Signin from './Signin.jsx';
-import Product from './Product.jsx';
 
 function App() {
   return (
