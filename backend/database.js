@@ -10,7 +10,7 @@ app.use(cors());
 const pool = createPool({
     host: "localhost",
     user: "root",
-    password: "Jega@2004",
+    password: "rajukalai23",
     database: "ecommerce",
     connectionLimit: 10
 });
@@ -34,7 +34,8 @@ app.get('/api/products', (req, res) => {
     });
 });
 
-const PORT = 5000;
+
+const PORT = 5001;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });

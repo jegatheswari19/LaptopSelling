@@ -5,7 +5,7 @@ function Product() {
     const [products, setProducts] = useState([]);
 
     useEffect(() => {
-        axios.get('http://localhost:5000/api/products')
+        axios.get('http://localhost:5001/api/products')
             .then(response => {
                 setProducts(response.data);
             })
@@ -70,3 +70,4 @@ const styles = {
 };
 
 export default Product;
+ 
