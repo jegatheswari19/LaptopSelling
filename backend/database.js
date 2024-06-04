@@ -34,8 +34,6 @@ app.get('/api/products', (req, res) => {
     });
 });
 
-<<<<<<< HEAD
-=======
 // API endpoint to insert user data
 app.post('/api/users', (req, res) => {
     const { email, password } = req.body;
@@ -71,9 +69,8 @@ app.post('/api/login', (req, res) => {
         }
     });
 });
->>>>>>> 4aed3e5c1effefcc218064eaddce014a092557b0
 
-const PORT = 5001;
+const PORT = 5000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
