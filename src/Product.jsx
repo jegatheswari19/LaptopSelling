@@ -3,10 +3,10 @@ import axios from 'axios';
 
 function Product() {
     const [products, setProducts] = useState([]);
-    const userId = 1; // Replace with actual user ID logic
+    const userId = 1; 
 
     useEffect(() => {
-        axios.get('http://localhost:5001/api/products')
+        axios.get('http://localhost:5000/api/products')
             .then(response => {
                 setProducts(response.data);
             })
@@ -16,13 +16,13 @@ function Product() {
     }, []);
 
     const handleAddToCart = (product) => {
-        axios.post('http://localhost:5001/api/add-to-cart', {
+        axios.post('http://localhost:5000/api/add-to-cart', {
             userId: userId,
             productId: product.product_id
         })
         .then(response => {
             console.log(response.data.message);
-            // Optionally show a success message or update the UI
+           alert('added to cart!');
         })
         .catch(error => {
             console.error("There was an error adding the product to the cart!", error);

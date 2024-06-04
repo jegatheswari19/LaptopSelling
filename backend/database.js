@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 const pool = createPool({
     host: "localhost",
     user: "root",
-    password: "rajukalai23",
+    password: "Jega@2004",
     database: "ecommerce",
     connectionLimit: 10
 });
@@ -34,7 +34,7 @@ app.get('/api/products', (req, res) => {
     });
 });
 
-<<<<<<< HEAD
+
 app.post('/api/add-to-cart', (req, res) => {
     const { userId, productId } = req.body;
     if (!userId || !productId) {
@@ -49,6 +49,26 @@ app.post('/api/add-to-cart', (req, res) => {
         res.status(201).json({ message: 'Product added to cart successfully' });
     });
 });
+
+
+app.post('/api/remove-cart', (req, res) => {
+    const { userId, productId } = req.body;
+    if (!userId || !productId) {
+        return res.status(400).json({ error: 'User ID and Product ID are required' });
+    }
+    const query = 'DELETE FROM cart where user_id=? and product_id=?';
+    pool.query(query, [userId, productId], (err, result) => {
+        if (err) {
+            console.error('Error adding to cart:', err);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+        res.status(201).json({ message: 'Product DELETED to cart successfully' });
+    });
+});
+
+
+
+
 
 
 app.get('/api/carts', (req, res) => {
@@ -80,10 +100,6 @@ app.get('/api/carts', (req, res) => {
 
 
 
-=======
-<<<<<<< HEAD
-=======
->>>>>>> a60f7a390a72f83aa1de8edcf38a1e79dac7308c
 // API endpoint to insert user data
 app.post('/api/users', (req, res) => {
     const { email, password } = req.body;
@@ -97,6 +113,7 @@ app.post('/api/users', (req, res) => {
             return res.status(500).json({ error: 'Internal server error' });
         }
         res.status(201).json({ message: 'User created successfully', userId: result.insertId });
+    
     });
 });
 
@@ -119,9 +136,8 @@ app.post('/api/login', (req, res) => {
         }
     });
 });
->>>>>>> 4aed3e5c1effefcc218064eaddce014a092557b0
 
-const PORT = 5001;
+const PORT = 5000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
