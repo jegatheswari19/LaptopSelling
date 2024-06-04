@@ -14,6 +14,11 @@ function Product() {
             });
     }, []);
 
+    const handleAddToCart = (product) => {
+        console.log(`Added to cart: ${product.model_name}`);
+       
+    };
+
     return (
         <div style={styles.container}>
             {products.map(product => (
@@ -31,6 +36,7 @@ function Product() {
                         <p><strong>Model ID:</strong> {product.modelid}</p>
                         <p><strong>Description:</strong> {product.descriptions}</p>
                         <p><strong>Price:</strong> Rs {product.price}</p>
+                        <button style={styles.button} onClick={() => handleAddToCart(product)}>Add to Cart</button>
                     </div>
                 </div>
             ))}
@@ -66,6 +72,19 @@ const styles = {
     title: {
         fontSize: '1.5em',
         margin: '10px 0'
+    },
+    button: {
+        backgroundColor: '#4CAF50',
+        color: 'white',
+        border: 'none',
+        padding: '10px 20px',
+        textAlign: 'center',
+        textDecoration: 'none',
+        display: 'inline-block',
+        fontSize: '16px',
+        margin: '10px 0',
+        borderRadius: '5px',
+        cursor: 'pointer'
     }
 };
 
