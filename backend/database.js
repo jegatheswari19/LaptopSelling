@@ -34,6 +34,59 @@ app.get('/api/products', (req, res) => {
     });
 });
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+app.post('/api/add-to-cart', (req, res) => {
+    const { userId, productId } = req.body;
+    if (!userId || !productId) {
+        return res.status(400).json({ error: 'User ID and Product ID are required' });
+    }
+    const query = 'INSERT INTO cart (user_id, product_id) VALUES (?, ?)';
+    pool.query(query, [userId, productId], (err, result) => {
+        if (err) {
+            console.error('Error adding to cart:', err);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+        res.status(201).json({ message: 'Product added to cart successfully' });
+    });
+});
+
+
+app.get('/api/carts', (req, res) => {
+    const query = `
+        SELECT c.user_id, c.product_id, p.model_name, p.brand_name, p.image, p.descriptions, p.price 
+        FROM cart c 
+        JOIN product p ON c.product_id = p.product_id
+    `;
+    pool.query(query, (err, result) => {
+        if (err) {
+            console.error('Error retrieving cart:', err);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+
+        try {
+            // Convert image to Base64 string for display
+            const products = result.map(product => ({
+                ...product,
+                image_url: product.image ? Buffer.from(product.image).toString('base64') : null
+            }));
+
+            res.json(products);
+        } catch (error) {
+            console.error('Error processing cart:', error);
+            res.status(500).json({ error: 'Error processing cart' });
+        }
+    });
+});
+
+
+
+=======
+<<<<<<< HEAD
+=======
+>>>>>>> a60f7a390a72f83aa1de8edcf38a1e79dac7308c
+>>>>>>> 9f0c803ff6cc253307b2f4f1caceaa6e6d0f1f61
 // API endpoint to insert user data
 app.post('/api/users', (req, res) => {
     const { email, password } = req.body;
