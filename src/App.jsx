@@ -8,7 +8,7 @@ import Home from './Home';
 import Product from './Product.jsx';
 import Login from './Login';
 import Signin from './Signin.jsx';
-//import Sidebar from './Sidebar.jsx';
+import Cart from './Cart.jsx';
 
 function App() {
   return (
@@ -22,7 +22,7 @@ function App() {
             <Route path="/products/:brand" element={<Product />} />
             <Route path="/Login" element={<Login />} />
             <Route path='/Signin' element={<Signin/>}/>
-            {/* <Route path='/Sidebar' element={<Sidebar/>}/> */}
+            <Route path='/Cart' element={<Cart/>}/>
            
           </Routes>
           <Footer/>
