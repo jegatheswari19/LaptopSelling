@@ -34,13 +34,6 @@ app.get('/api/products', (req, res) => {
     });
 });
 
-<<<<<<< HEAD
-
-=======
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> bc66636eea4354b94a6153ef0c28524b485a6c5d
 app.post('/api/add-to-cart', (req, res) => {
     const { userId, productId } = req.body;
     if (!userId || !productId) {
@@ -106,14 +99,6 @@ app.get('/api/carts', (req, res) => {
 
 
 
-<<<<<<< HEAD
-=======
-=======
-<<<<<<< HEAD
-=======
->>>>>>> a60f7a390a72f83aa1de8edcf38a1e79dac7308c
->>>>>>> 9f0c803ff6cc253307b2f4f1caceaa6e6d0f1f61
->>>>>>> bc66636eea4354b94a6153ef0c28524b485a6c5d
 // API endpoint to insert user data
 app.post('/api/users', (req, res) => {
     const { email, password } = req.body;
