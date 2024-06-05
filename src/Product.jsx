@@ -6,23 +6,23 @@ function Product() {
     const userId = 1; 
 
     useEffect(() => {
-        axios.get('http://localhost:5000/api/products')
+         axios.get('http://localhost:5000/api/products')
             .then(response => {
                 setProducts(response.data);
             })
             .catch(error => {
-                console.error("There was an error fetching the products!", error);
+                console.log(error.response.data);
             });
     }, []);
 
     const handleAddToCart = (product) => {
-        axios.post('http://localhost:5000/api/add-to-cart', {
+        axios.post('http://localhost:5001/api/add-to-cart', {
             userId: userId,
             productId: product.product_id
         })
         .then(response => {
             console.log(response.data.message);
-           alert('added to cart!');
+            // Optionally show a success message or update the UI
         })
         .catch(error => {
             console.error("There was an error adding the product to the cart!", error);

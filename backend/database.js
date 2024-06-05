@@ -11,7 +11,11 @@ app.use(bodyParser.json());
 const pool = createPool({
     host: "localhost",
     user: "root",
+<<<<<<< HEAD
+    password: "mathu23",
+=======
     password: "Jega@2004",
+>>>>>>> 5286a7ad3e38bbad67f6a91fa127ed9b51af79ed
     database: "ecommerce",
     connectionLimit: 10
 });
@@ -34,6 +38,10 @@ app.get('/api/products', (req, res) => {
     });
 });
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> 5286a7ad3e38bbad67f6a91fa127ed9b51af79ed
 app.post('/api/add-to-cart', (req, res) => {
     const { userId, productId } = req.body;
     if (!userId || !productId) {
@@ -99,6 +107,10 @@ app.get('/api/carts', (req, res) => {
 
 
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> 5286a7ad3e38bbad67f6a91fa127ed9b51af79ed
 // API endpoint to insert user data
 app.post('/api/users', (req, res) => {
     const { email, password } = req.body;
