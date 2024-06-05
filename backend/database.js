@@ -61,7 +61,7 @@ app.post('/api/remove-cart', (req, res) => {
             console.error('Error adding to cart:', err);
             return res.status(500).json({ error: 'Internal server error' });
         }
-        res.status(201).json({ message: 'Product DELETED to cart successfully' });
+        res.status(201).json({ message: 'Product DELETED successfully' });
     });
 });
 
@@ -83,7 +83,7 @@ app.get('/api/carts', (req, res) => {
         }
 
         try {
-            // Convert image to Base64 string for display
+        
             const products = result.map(product => ({
                 ...product,
                 image_url: product.image ? Buffer.from(product.image).toString('base64') : null
