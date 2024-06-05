@@ -1,33 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+
 function Cart() {
     const [cart, setCart] = useState([]);
 
     useEffect(() => {
-        axios.get('http://localhost:5001/api/carts') // Adjust port if necessary
+        axios.get('http://localhost:5000/api/carts') 
             .then(response => {
                 setCart(response.data);
             })
             .catch(error => {
                 console.error("There was an error fetching the cart!", error);
             });
-    }, []);
+    });
 
-    const handleRemove = (productId) => {
-        // Add your logic for removing the item from the cart
-        const updatedCart = cart.filter(item => item.productid !== productId);
-        setCart(updatedCart);
-    };
-
-    const handleQuantityChange = (productId, amount) => {
-        const updatedCart = cart.map(item => {
-            if (item.productid === productId) {
-                return { ...item, quantity: item.quantity + amount };
-            }
-            return item;
-        }).filter(item => item.quantity > 0);
-        setCart(updatedCart);
+    const handleRemove = (user_id,product_id) => {
+        axios.post('http://localhost:5000/api/remove-cart', {
+            userId: user_id,
+            productId: product_id,
+        })
+        .then(response => {
+            console.log(response.data.message);
+           alert('removed from cart!');
+        })
+        .catch(error => {
+            console.error("There was an error removing the product to the cart!", error);
+        });
     };
 
     return (
@@ -48,12 +47,12 @@ function Cart() {
                         <p><strong>Description:</strong> {item.descriptions}</p>
                     </div>
                     <div style={styles.quantity}>
-                        <button onClick={() => handleQuantityChange(item.productid, -1)} style={styles.button} type="button">-</button>
+                        <button onClick={() => handleQuantityChange(item.product_id, -1)} style={styles.button} type="button">-</button>
                         <span>{item.quantity}</span>
-                        <button onClick={() => handleQuantityChange(item.productid, 1)} style={styles.button} type="button">+</button>
+                        <button onClick={() => handleQuantityChange(item.product_id, 1)} style={styles.button} type="button">+</button>
                     </div>
                     <div style={styles.price}>Rs {item.price}</div>
-                    <button onClick={() => handleRemove(item.productid)} style={styles.removeButton} type="button">Remove</button>
+                    <button onClick={() => handleRemove(item.user_id,item.product_id)} style={styles.removeButton} type="button">Remove</button>
                 </div>
             ))}
         </div>
