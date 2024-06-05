@@ -99,10 +99,6 @@ app.get('/api/carts', (req, res) => {
 
 
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 5286a7ad3e38bbad67f6a91fa127ed9b51af79ed
 // API endpoint to insert user data
 app.post('/api/users', (req, res) => {
     const { email, password } = req.body;
