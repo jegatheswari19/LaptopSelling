@@ -34,10 +34,6 @@ app.get('/api/products', (req, res) => {
     });
 });
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 5286a7ad3e38bbad67f6a91fa127ed9b51af79ed
 app.post('/api/add-to-cart', (req, res) => {
     const { userId, productId } = req.body;
     if (!userId || !productId) {
