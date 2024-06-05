@@ -3,30 +3,20 @@ import axios from 'axios';
 
 function Product() {
     const [products, setProducts] = useState([]);
-    const userId = 1; // Replace with actual user ID logic
 
     useEffect(() => {
-        axios.get('http://localhost:5000/api/products')
+         axios.get('http://localhost:5000/api/products')
             .then(response => {
                 setProducts(response.data);
             })
             .catch(error => {
-                console.error("There was an error fetching the products!", error);
+                console.log(error.response.data);
             });
     }, []);
 
     const handleAddToCart = (product) => {
-        axios.post('http://localhost:5001/api/add-to-cart', {
-            userId: userId,
-            productId: product.product_id
-        })
-        .then(response => {
-            console.log(response.data.message);
-            // Optionally show a success message or update the UI
-        })
-        .catch(error => {
-            console.error("There was an error adding the product to the cart!", error);
-        });
+        console.log(`Added to cart: ${product.model_name}`);
+       
     };
 
     return (
