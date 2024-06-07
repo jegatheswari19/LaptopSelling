@@ -1,60 +1,126 @@
+// Cart.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import Alert from './Alert';
+import { useNavigate } from 'react-router-dom';
 
 function Cart() {
     const [cart, setCart] = useState([]);
+    const [alertMessage, setAlertMessage] = useState('');
+    const loggedIn = sessionStorage.getItem('loggedIn') === 'true';
+    const [totalPayment, setTotalPayment] = useState(0);
+    const navigate = useNavigate();
+   
 
     useEffect(() => {
-        axios.get('http://localhost:5000/api/carts') 
+        if (!loggedIn) {
+            setCart([]);
+            return;
+        }
+
+        axios.get('http://localhost:5000/api/carts')
             .then(response => {
                 setCart(response.data);
+                calculateTotalPayment(response.data);
             })
             .catch(error => {
                 console.error("There was an error fetching the cart!", error);
             });
-    });
+    }, []);
 
-    const handleRemove = (user_id,product_id) => {
-        axios.post('http://localhost:5000/api/remove-cart', {
-            userId: user_id,
-            productId: product_id,
+    const calculateTotalPayment = (cartItems) => {
+        let total = 0;
+        cartItems.forEach(item => {
+            total += item.price;
+        });
+        setTotalPayment(total);
+    };
+
+    const handleQuantityChange = (userId, productId, delta, unitPrice) => {
+        const item = cart.find(item => item.product_id === productId);
+        if (!item) return;
+
+        const newQuantity = item.quantity + delta;
+        if (newQuantity < 1) return;
+
+        const newPrice = unitPrice * newQuantity;
+
+        axios.post('http://localhost:5000/api/update-cart-quantity', {
+            userId,
+            productId,
+            quantity: newQuantity // Ensure quantity is a valid number
         })
         .then(response => {
-            console.log(response.data.message);
-           alert('removed from cart!');
+            const updatedCart = cart.map(cartItem => 
+                cartItem.product_id === productId 
+                    ? { ...cartItem, quantity: newQuantity, price: newPrice }
+                    : cartItem
+            );
+            setCart(updatedCart);
+            calculateTotalPayment(updatedCart);
         })
         .catch(error => {
-            console.error("There was an error removing the product to the cart!", error);
+            console.error("There was an error updating the quantity!", error);
         });
+    };
+
+    const handleRemove = (userId, productId) => {
+        axios.post('http://localhost:5000/api/remove-cart', {
+            userId,
+            productId,
+        })
+        .then(response => {
+            const updatedCart = cart.filter(item => item.product_id !== productId);
+            setCart(updatedCart);
+            calculateTotalPayment(updatedCart);
+            setAlertMessage('Product Removed from Cart!');
+        })
+        .catch(error => {
+            console.error("There was an error removing the product from the cart!", error);
+        });
+    };
+
+    const closeAlert = () => {
+        setAlertMessage('');
+    };
+
+    const handleProceedToPayment = () => {
+        navigate('/Payment');
     };
 
     return (
         <div style={styles.container}>
+            {alertMessage && <Alert message={alertMessage} onClose={closeAlert} />}
+            <div style={styles.cartHeader}>
+                <h1>Your Cart</h1>
+            </div>
             {cart.map(item => (
-                <div key={item.productid} style={styles.card}>
-                    {item.image_url && (
-                        <img 
-                            src={`data:image/jpeg;base64,${item.image_url}`} 
-                            alt={item.model_name} 
-                            style={styles.image} 
-                            loading="lazy" 
-                        />
-                    )}
+                <div key={item.product_id} style={styles.card}>
+                    <img 
+                        src={`data:image/jpeg;base64,${item.image_url}`} 
+                        alt={item.model_name} 
+                        style={styles.image} 
+                        loading="lazy" 
+                    />
                     <div style={styles.info}>
                         <h2 style={styles.title}>{item.model_name}</h2>
                         <p><strong>Brand:</strong> {item.brand_name}</p>
                         <p><strong>Description:</strong> {item.descriptions}</p>
+                        <p><strong>Quantity:</strong> {item.quantity}</p>
                     </div>
                     <div style={styles.quantity}>
-                        <button onClick={() => handleQuantityChange(item.product_id, -1)} style={styles.button} type="button">-</button>
+                        <button onClick={() => handleQuantityChange(item.user_id, item.product_id, -1, item.price / item.quantity)} style={styles.button} type="button">-</button>
                         <span>{item.quantity}</span>
-                        <button onClick={() => handleQuantityChange(item.product_id, 1)} style={styles.button} type="button">+</button>
+                        <button onClick={() => handleQuantityChange(item.user_id, item.product_id, 1, item.price / item.quantity)} style={styles.button} type="button">+</button>
                     </div>
                     <div style={styles.price}>Rs {item.price}</div>
-                    <button onClick={() => handleRemove(item.user_id,item.product_id)} style={styles.removeButton} type="button">Remove</button>
+                    <button onClick={() => handleRemove(item.user_id, item.product_id)} style={styles.removeButton} type="button">Remove</button>
                 </div>
             ))}
+            <div style={styles.totalPayment}>
+                <p>Total Amount: Rs {totalPayment}</p>
+                <button onClick={handleProceedToPayment} style={styles.proceedButton} disabled={cart.length === 0} type="button">Proceed to Payment</button>
+            </div>
         </div>
     );
 }
@@ -67,6 +133,14 @@ const styles = {
         width: '100%',
         padding: '20px',
         boxSizing: 'border-box'
+    },
+    cartHeader: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        width: '100%',
+        maxWidth: '800px',
+        marginBottom: '20px',
     },
     card: {
         display: 'flex',
@@ -81,10 +155,10 @@ const styles = {
         boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
     },
     image: {
-        width: '150px',
-        height: '150px',
+        width: '200px',
+        height: '200px',
         objectFit: 'cover',
-        flexShrink: 0,
+        marginRight: '20px',
     },
     info: {
         display: 'flex',
@@ -119,6 +193,20 @@ const styles = {
         borderRadius: '5px',
         cursor: 'pointer',
         marginLeft: '20px'
+    },
+    totalPayment: {
+        marginTop: '20px',
+        textAlign: 'right',
+        width: '100%',
+        maxWidth: '800px',
+    },
+    proceedButton: {
+        padding: '10px 20px',
+        backgroundColor: '#4CAF50',
+        color: 'white',
+        border: 'none',
+        borderRadius: '5px',
+        cursor: 'pointer',
     }
 };
 
