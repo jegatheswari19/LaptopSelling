@@ -3,29 +3,31 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import './index.css'; 
 import Navbars from './Navbars';
-import Footer from './Footer'
+import Footer from './Footer';
 import Home from './Home';
-import Product from './Product.jsx';
+import Product from './Product';
 import Login from './Login';
-import Signin from './Signin.jsx';
-import Cart from './Cart.jsx';
+import Signin from './Signin';
+import Cart from './Cart';
+import BrandProduct from './BrandProduct';
+import Payment from './Payment';
 
 function App() {
   return (
     <Router>
       <div className="App">
         <header className="App-header">
-        <Navbars/>
+          <Navbars />
           <Routes>
-            <Route path="/" element={<Home/>} />
-            <Route path='/Product' element={<Product/>}/>
-            <Route path="/products/:brand" element={<Product />} />
-            <Route path="/Login" element={<Login />} />
-            <Route path='/Signin' element={<Signin/>}/>
-            <Route path='/Cart' element={<Cart/>}/>
-           
+            <Route path="/" element={<Home />} />
+            <Route path="/product" element={<Product />} />
+            <Route path="/products/:brandName" element={<BrandProduct />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signin" element={<Signin />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/Payment" element={<Payment />} />
           </Routes>
-          <Footer/>
+          <Footer />
         </header>
       </div>
     </Router>

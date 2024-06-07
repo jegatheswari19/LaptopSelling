@@ -1,13 +1,14 @@
 // src/Product.js
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import { CartContext } from './CartContext';
+import Alert from './Alert';
 
 function Product() {
     const [products, setProducts] = useState([]);
-    const userId = 1; // Assuming user ID is 1 for demonstration
+    const [cart, setCart] = useState([]);
+    const [alertMessage, setAlertMessage] = useState('');
     const [loggedIn, setLoggedIn] = useState(sessionStorage.getItem('loggedIn') === 'true');
-    const { setCartCount } = useContext(CartContext);
+    const userId = 1; 
 
     useEffect(() => {
         axios.get('http://localhost:5000/api/products')
@@ -17,13 +18,23 @@ function Product() {
             .catch(error => {
                 console.log(error.response.data);
             });
+
     }, []);
 
     const handleAddToCart = (product) => {
+
         if (!loggedIn) {
+            // Redirect user to login page if not logged in
             alert('Please login to add products to the cart.');
             return;
         }
+    
+        const item = cart.find(item => item.product_id === product.product_id);
+        if (item) {
+            alert('Product is already in the cart!');
+            return;
+        }
+        
         axios.post('http://localhost:5000/api/add-to-cart', {
             userId: userId,
             productId: product.product_id,
@@ -31,16 +42,26 @@ function Product() {
         })
         .then(response => {
             console.log(response.data.message);
-            alert('Product added');
-            setCartCount(prevCount => prevCount + 1); // Update cart count
+            setAlertMessage('Product Added to Cart!');
+            setCart([...cart, product]); // Update cart state
         })
         .catch(error => {
-            console.error("There was an error adding the product to the cart!", error);
+            if (error.response && error.response.status === 409) {
+                alert('Product is already in the cart!');
+            } else {
+                console.error("There was an error adding the product to the cart!", error);
+                setAlertMessage('There was an error adding the product to the cart!');
+            }
         });
+    };
+    
+    const closeAlert = () => {
+        setAlertMessage('');
     };
 
     return (
         <div style={styles.container}>
+            {alertMessage && <Alert message={alertMessage} onClose={closeAlert} />}
             {products.map(product => (
                 <div key={product.product_id} style={styles.card}>
                     <img 
