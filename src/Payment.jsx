@@ -2,29 +2,36 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 function Payment() {
-    const [userId, setUserId] = useState(1); // Set this to the logged-in user's ID
+ 
     const [orderStatus, setOrderStatus] = useState('');
     const[paymentMethod,setpaymentMethod] = useState('');
     const [totalAmount, setTotalAmount] = useState(0);
     const [address, setAddress] = useState('');
 
+    const userId= sessionStorage.getItem('userId');
+
     useEffect(() => {
         fetchCartItems();
     }, []);
-
     const fetchCartItems = () => {
-        axios.get(`http://localhost:5000/api/carts?userId=${userId}`)
+        const userId = sessionStorage.getItem('userId'); // Get userId from sessionStorage
+        if (!userId) {
+            console.error('User ID not found in sessionStorage');
+            return;
+        }
+    
+        axios.post('http://localhost:5000/api/carts', { userId }, { withCredentials: true })
             .then(response => {
                 const cartItems = response.data;
                 const amount = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
                 setTotalAmount(amount);
-                setpaymentMethod ('Cash on Delivery');
-                setUserId(1);
+                setpaymentMethod('Cash on Delivery');
             })
             .catch(error => {
                 console.error('Error fetching cart items:', error);
             });
     };
+    
 
     const handleOrderPlacement = () => {
         const orderDetails = {
@@ -41,7 +48,6 @@ function Payment() {
             })
             .catch(error => {
                 console.error('There was an error placing the order!', error);
-                setOrderStatus('Failed to place order. Please try again.');
             });
     };
 

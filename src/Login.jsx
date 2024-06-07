@@ -16,22 +16,32 @@ function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
-
         try {
             const response = await axios.post('http://localhost:5000/api/login', {
-                email,
-                password
-            });
-            if (response.status === 200) {
-                setEmail('');
-                setPassword('');
-                navigate('/');
-                sessionStorage.setItem('loggedIn', 'true');
+                email: email,
+                password: password
+            }, { withCredentials: true });
+
+            console.log('Login response:', response); // Log the entire response
+            if (response && response.data && response.data.user_id) {
+                sessionStorage.setItem('userId', response.data.user_id); // Store the user ID
+                sessionStorage.setItem('loggedIn', 'true'); // Store the logged-in status
+                console.log('Login successful');
+                navigate('/'); // Navigate to the homepage or dashboard
+            } else {
+                console.error('Unexpected login response:', response);
+                alert('Login failed: Unexpected response');
             }
         } catch (error) {
-            setError('Invalid email or password');
+            console.error('Error logging in:', error);
+            if (error.response && error.response.data) {
+                setError(error.response.data.error || 'Login failed');
+            } else {
+                setError('Login failed: No response from server');
+            }
         }
-    };
+    }
+
 
     return (
         <div className="wrapper login">

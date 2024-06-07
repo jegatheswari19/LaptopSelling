@@ -1,5 +1,4 @@
-// src/Product.js
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Alert from './Alert';
 
@@ -8,10 +7,10 @@ function Product() {
     const [cart, setCart] = useState([]);
     const [alertMessage, setAlertMessage] = useState('');
     const [loggedIn, setLoggedIn] = useState(sessionStorage.getItem('loggedIn') === 'true');
-    const userId = 1; 
 
+    // Fetch products and cart items on component mount
     useEffect(() => {
-        axios.get('http://localhost:5000/api/products')
+        axios.get('http://localhost:5000/api/products', { withCredentials: true })
             .then(response => {
                 setProducts(response.data);
             })
@@ -19,42 +18,54 @@ function Product() {
                 console.log(error.response.data);
             });
 
-    }, []);
+        if (loggedIn) {
+            axios.get('http://localhost:5000/api/carts', { withCredentials: true })
+                .then(response => {
+                    setCart(response.data);
+                })
+                .catch(error => {
+                    console.log('Error fetching cart items:', error.response.data);
+                });
+        }
+    }, [loggedIn]);
 
     const handleAddToCart = (product) => {
-
         if (!loggedIn) {
-            // Redirect user to login page if not logged in
-            alert('Please login to add products to the cart.');
+            setAlertMessage('Please login to add products to the cart.');
             return;
         }
-    
+
         const item = cart.find(item => item.product_id === product.product_id);
         if (item) {
-            alert('Product is already in the cart!');
+            setAlertMessage('Product is already in the cart!');
             return;
         }
-        
+
         axios.post('http://localhost:5000/api/add-to-cart', {
-            userId: userId,
+            userId:sessionStorage.getItem('userId'),
             productId: product.product_id,
             Price: product.price
-        })
-        .then(response => {
-            console.log(response.data.message);
-            setAlertMessage('Product Added to Cart!');
-            setCart([...cart, product]); // Update cart state
-        })
-        .catch(error => {
-            if (error.response && error.response.status === 409) {
-                alert('Product is already in the cart!');
-            } else {
-                console.error("There was an error adding the product to the cart!", error);
-                setAlertMessage('There was an error adding the product to the cart!');
-            }
-        });
+        }, { withCredentials: true })
+            .then(response => {
+                setAlertMessage('Product Added to Cart!');
+                setCart([...cart, product]);
+            })
+            .catch(error => {
+                if (error.response) {
+                    if (error.response.status === 401) {
+                        setAlertMessage('You need to log in to add products to the cart!');
+                    } else if (error.response.status === 409) {
+                        setAlertMessage('Product is already in the cart!');
+                    } else {
+                        setAlertMessage('There was an error adding the product to the cart!');
+                    }
+                } else {
+                    console.error("There was an error adding the product to the cart!", error);
+                    setAlertMessage('There was an error adding the product to the cart!');
+                }
+            });
     };
-    
+
     const closeAlert = () => {
         setAlertMessage('');
     };
@@ -64,11 +75,11 @@ function Product() {
             {alertMessage && <Alert message={alertMessage} onClose={closeAlert} />}
             {products.map(product => (
                 <div key={product.product_id} style={styles.card}>
-                    <img 
-                        src={`data:image/jpeg;base64,${product.image_url}`} 
-                        alt={product.model_name} 
-                        style={styles.image} 
-                        loading="lazy" 
+                    <img
+                        src={`data:image/jpeg;base64,${product.image_url}`}
+                        alt={product.model_name}
+                        style={styles.image}
+                        loading="lazy"
                     />
                     <div style={styles.info}>
                         <h2 style={styles.title}>{product.model_name}</h2>

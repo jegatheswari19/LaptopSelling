@@ -3,20 +3,63 @@ const { createPool } = require('mysql');
 const cors = require('cors');
 const path = require('path');
 const bodyParser = require('body-parser');
+const session = require('express-session');
 
 const app = express();
-app.use(cors());
 app.use(bodyParser.json());
+
+const corsOptions = {
+    origin: ['http://localhost:5174','http://localhost:5173','http://localhost:5175'], // Replace with your frontend URL
+    credentials: true,
+};
+
+app.use(cors(corsOptions));
+
+app.use(session({
+    secret: '3$cVnZrM5ft2GgE#sX7!R',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: false, // Set to true if your site is served over HTTPS
+        httpOnly: true,
+        sameSite: 'lax', // Adjust sameSite setting based on your needs
+    }
+}));
 
 const pool = createPool({
     host: "localhost",
     user: "root",
-    password: "mathu23",
+    password: "Jega@2004",
     database: "ecommerce",
     connectionLimit: 10
 });
 
 app.use('/images', express.static(path.join(__dirname, 'images')));
+app.post('/api/login', (req, res) => {
+    const { email, password } = req.body;
+    if (!email || !password) {
+        return res.status(400).json({ error: 'Email and password are required' });
+    }
+    const query = 'SELECT * FROM users WHERE email = ? AND password = ?';
+    pool.query(query, [email, password], (err, results) => {
+        if (err) {
+            console.error('Error retrieving user:', err);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+        if (results.length > 0) {
+            req.session.userId = results[0].user_id;
+            console.log('User ID set in session:', req.session.userId); // Log the user ID
+            res.status(200).json({ message: 'Login successful', user_id: results[0].user_id });
+        } else {
+            res.status(401).json({ error: 'Invalid email or password' });
+        }
+    });
+});
+
+app.get('/api/session-test', (req, res) => {
+    res.json({ userId: req.session.userId });
+});
+
 
 app.get('/api/products', (req, res) => {
     const { brand } = req.query;
@@ -57,7 +100,7 @@ app.get('/api/productsByBrand', (req, res) => {
 
 
 app.post('/api/add-to-cart', (req, res) => {
-    const { userId, productId } = req.body;
+    const { userId, productId,Price } = req.body;
     if (!userId || !productId) {
         return res.status(400).json({ error: 'User ID and Product ID are required' });
     }
@@ -70,8 +113,8 @@ app.post('/api/add-to-cart', (req, res) => {
         if (result.length > 0) {
             return res.status(409).json({ message: 'Product is already in the cart' });
         }
-        const insertQuery = 'INSERT INTO cart (user_id, product_id, quantity) VALUES (?, ?, 1)';
-        pool.query(insertQuery, [userId, productId], (err, result) => {
+        const insertQuery = 'INSERT INTO cart (user_id, product_id, price, quantity) VALUES (?, ?, ?, 1)';
+        pool.query(insertQuery, [userId, productId,Price], (err, result) => {
             if (err) {
                 console.error('Error adding to cart:', err);
                 return res.status(500).json({ error: 'Internal server error' });
@@ -96,15 +139,20 @@ app.post('/api/remove-cart', (req, res) => {
     });
 });
 
-// Update the '/api/carts' endpoint to fetch cart items for the logged-in user
 
-app.get('/api/carts', (req, res) => {
+app.post('/api/carts', (req, res) => {
+    const { userId } = req.body;
+    if (!userId) {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+
     const query = `
-        SELECT c.user_id, c.product_id, p.model_name, p.brand_name, p.image, p.descriptions, p.price, c.quantity 
+        SELECT c.product_id, p.model_name, p.brand_name, p.image, p.descriptions, c.price, c.quantity 
         FROM cart c 
-        JOIN product p ON c.product_id = p.product_id
+        JOIN product p ON c.product_id = p.product_id 
+        WHERE c.user_id = ?
     `;
-    pool.query(query, (err, result) => {
+    pool.query(query, [userId], (err, result) => {
         if (err) {
             console.error('Error retrieving cart:', err);
             return res.status(500).json({ error: 'Internal server error' });
@@ -123,6 +171,7 @@ app.get('/api/carts', (req, res) => {
         }
     });
 });
+
 
 app.post('/api/update-cart-quantity', (req, res) => {
     const { userId, productId, quantity } = req.body;
@@ -168,26 +217,6 @@ app.post('/api/update-cart-quantity', (req, res) => {
         });
     });
 });
-
-app.post('/api/login', (req, res) => {
-    const { email, password } = req.body;
-    if (!email || !password) {
-        return res.status(400).json({ error: 'Email and password are required' });
-    }
-    const query = 'SELECT * FROM users WHERE email = ? AND password = ?';
-    pool.query(query, [email, password], (err, results) => {
-        if (err) {
-            console.error('Error retrieving user:', err);
-            return res.status(500).json({ error: 'Internal server error' });
-        }
-        if (results.length > 0) {
-            res.status(200).json({ message: 'Login successful' });
-        } else {
-            res.status(401).json({ error: 'Invalid email or password' });
-        }
-    });
-});
-
 
 // Inside the '/api/place-order' endpoint
 // Inside the '/api/place-order' endpoint
@@ -247,6 +276,19 @@ app.post('/api/place-order', (req, res) => {
         });
     });
 });
+
+app.get('/api/orders', (req, res) => {
+    const { userId } = req.query;
+    const query = 'SELECT * FROM orders WHERE user_id = ?';
+    pool.query(query, [userId], (err, result) => {
+        if (err) {
+            console.error('Error retrieving orders:', err);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+        res.json(result);
+    });
+});
+
 
 
 

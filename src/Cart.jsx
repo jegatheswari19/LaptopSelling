@@ -11,14 +11,14 @@ function Cart() {
     const [totalPayment, setTotalPayment] = useState(0);
     const navigate = useNavigate();
    
-
     useEffect(() => {
         if (!loggedIn) {
             setCart([]);
             return;
         }
-
-        axios.get('http://localhost:5000/api/carts')
+    
+        const userId = sessionStorage.getItem('userId'); // Get userId from sessionStorage
+        axios.post('http://localhost:5000/api/carts', { userId }, { withCredentials: true })
             .then(response => {
                 setCart(response.data);
                 calculateTotalPayment(response.data);
@@ -27,6 +27,7 @@ function Cart() {
                 console.error("There was an error fetching the cart!", error);
             });
     }, []);
+    
 
     const calculateTotalPayment = (cartItems) => {
         let total = 0;
@@ -44,10 +45,11 @@ function Cart() {
         if (newQuantity < 1) return;
 
         const newPrice = unitPrice * newQuantity;
-
-        axios.post('http://localhost:5000/api/update-cart-quantity', {
-            userId,
-            productId,
+      
+        axios.post('http://localhost:5000/api/update-cart-quantity',  {
+         userId :sessionStorage.getItem('userId'),// Get userId from sessionStorage
+     
+            productId ,
             quantity: newQuantity // Ensure quantity is a valid number
         })
         .then(response => {
@@ -66,7 +68,8 @@ function Cart() {
 
     const handleRemove = (userId, productId) => {
         axios.post('http://localhost:5000/api/remove-cart', {
-            userId,
+            userId:sessionStorage.getItem('userId'),
+
             productId,
         })
         .then(response => {

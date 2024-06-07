@@ -11,6 +11,8 @@ import Signin from './Signin';
 import Cart from './Cart';
 import BrandProduct from './BrandProduct';
 import Payment from './Payment';
+import OrderHistory from './OrderHistory';
+
 
 function App() {
   return (
@@ -26,6 +28,7 @@ function App() {
             <Route path="/signin" element={<Signin />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/Payment" element={<Payment />} />
+            <Route path="/OrderHistory" element={<OrderHistory />} />
           </Routes>
           <Footer />
         </header>
