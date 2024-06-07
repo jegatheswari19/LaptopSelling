@@ -35,20 +35,18 @@ app.get('/api/products', (req, res) => {
 });
 
 app.post('/api/add-to-cart', (req, res) => {
-    const { userId, productId } = req.body;
-    if (!userId || !productId) {
-        return res.status(400).json({ error: 'User ID and Product ID are required' });
-    }
-    const query = 'INSERT INTO cart (user_id, product_id) VALUES (?, ?)';
-    pool.query(query, [userId, productId], (err, result) => {
+    const { userId, productId, Price } = req.body;
+
+    const query = 'INSERT INTO cart (user_id, product_id, price, quantity) VALUES (?, ?, ?,1)';
+
+    pool.query(query, [userId, productId, Price], (err, result) => {
         if (err) {
-            console.error('Error adding to cart:', err);
-            return res.status(500).json({ error: 'Internal server error' });
+            console.error(err);
+            return res.status(500).json({ message: 'There was an error adding the product to the cart.' });
         }
-        res.status(201).json({ message: 'Product added to cart successfully' });
+        res.status(200).json({ message: 'Product added to cart successfully!' });
     });
 });
-
 
 app.post('/api/remove-cart', (req, res) => {
     const { userId, productId } = req.body;
@@ -65,7 +63,20 @@ app.post('/api/remove-cart', (req, res) => {
     });
 });
 
-
+app.post('/api/update-cart-quantity', (req, res) => {
+    const { userId, productId, quantity } = req.body;
+    if (!userId || !productId || quantity === undefined) {
+        return res.status(400).json({ error: 'User ID, Product ID, and quantity are required' });
+    }
+    const query = 'UPDATE cart SET quantity = ? WHERE user_id = ? AND product_id = ?';
+    pool.query(query, [quantity, userId, productId], (err, result) => {
+        if (err) {
+            console.error('Error updating cart quantity:', err);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+        res.status(200).json({ message: 'Quantity updated successfully' });
+    });
+});
 
 
 

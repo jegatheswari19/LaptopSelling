@@ -1,12 +1,16 @@
-import React, { useState, useEffect } from 'react';
+// src/Product.js
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import { CartContext } from './CartContext';
 
 function Product() {
     const [products, setProducts] = useState([]);
-    const userId = 1; 
+    const userId = 1; // Assuming user ID is 1 for demonstration
+    const [loggedIn, setLoggedIn] = useState(sessionStorage.getItem('loggedIn') === 'true');
+    const { setCartCount } = useContext(CartContext);
 
     useEffect(() => {
-         axios.get('http://localhost:5000/api/products')
+        axios.get('http://localhost:5000/api/products')
             .then(response => {
                 setProducts(response.data);
             })
@@ -16,13 +20,19 @@ function Product() {
     }, []);
 
     const handleAddToCart = (product) => {
-        axios.post('http://localhost:5001/api/add-to-cart', {
+        if (!loggedIn) {
+            alert('Please login to add products to the cart.');
+            return;
+        }
+        axios.post('http://localhost:5000/api/add-to-cart', {
             userId: userId,
-            productId: product.product_id
+            productId: product.product_id,
+            Price: product.price
         })
         .then(response => {
             console.log(response.data.message);
-            // Optionally show a success message or update the UI
+            alert('Product added');
+            setCartCount(prevCount => prevCount + 1); // Update cart count
         })
         .catch(error => {
             console.error("There was an error adding the product to the cart!", error);
@@ -99,4 +109,3 @@ const styles = {
 };
 
 export default Product;
- 
